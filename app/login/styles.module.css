@@ -1,0 +1,16 @@
+.default-page {
+  background: #ebeff5;
+  height: 100vh;
+}
+
+.login-form {
+  background-color: red !important;
+  width: fit-content;
+  padding: 25px 50px 25px 50px;
+  border-radius: 10%;
+  margin: auto;
+}
+
+.login-register-field {
+  padding: 10px;
+}
