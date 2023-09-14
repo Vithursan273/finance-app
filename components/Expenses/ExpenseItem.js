@@ -4,6 +4,7 @@ import { React, useState, useEffect } from "react";
 
 const ExpenseItem = ({
   expenseName,
+  expenseCategory,
   expenseCost,
   expenseFrequency,
   deleteItem,
@@ -11,6 +12,7 @@ const ExpenseItem = ({
   return (
     <div className={`${styles.expense_item}`}>
       <div className={`${styles.expense_child}`}>{expenseName}</div>
+      <div className={`${styles.expense_child}`}>{expenseCategory}</div>
       <div className={`${styles.expense_child}`}>{expenseCost}</div>
       <div className={`${styles.expense_child}`}>{expenseFrequency}</div>
       <button onClick={deleteItem}>Delete</button>

@@ -1,10 +1,10 @@
 import Image from "next/image";
-import FormComponent from "@/components/FormComponent";
+import ExpensesPage from "@/components/Expenses/ExpensesPage";
 
 export default async function Home() {
   return (
     <main>
-      <FormComponent />
+      <ExpensesPage />
     </main>
   );
 }

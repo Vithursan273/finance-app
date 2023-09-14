@@ -1,10 +1,11 @@
 "use client";
 import styles from "./styles.module.css";
 import { React, useState, useEffect } from "react";
-import ExpenseItem from "@/components/ExpenseItem";
-import ExpenseModal from "@/components/ExpenseModal";
+import SummaryChart from "@/components/SummaryChart";
+import ExpenseItem from "@/components/Expenses/ExpenseItem";
+import ExpenseModal from "@/components/Expenses/ExpenseModal";
 
-const FormComponent = () => {
+const ExpensesList = () => {
   const getCSRFToken = () => {
     const cookieValue = document.cookie
       .split("; ")
@@ -20,14 +21,71 @@ const FormComponent = () => {
 
   const [formData, setFormData] = useState({
     expenseName: "",
-    expenseCost: "",
+    expenseCategory: "",
+    expenseCost: 0,
     expenseFrequency: "",
   });
   const [objectArrayState, setObjectArrayState] = useState([]);
 
+  const [summary, setSummary] = useState({
+    totalExpenses: "",
+    categoryExpenses: {},
+  });
+
+  const calculateTotalExpenses = () => {
+    var total = 0;
+    var categoryTotal = {};
+    for (let i = 0; i < objectArrayState.length; i++) {
+      total += objectArrayState[i].expenseCost;
+      if (categoryTotal.hasOwnProperty(objectArrayState[i].expenseCategory)) {
+        categoryTotal[objectArrayState[i].expenseCategory] +=
+          objectArrayState[i].expenseCost;
+      } else {
+        categoryTotal[objectArrayState[i].expenseCategory] =
+          objectArrayState[i].expenseCost;
+      }
+    }
+    console.log(categoryTotal);
+    setSummary((prevSummary) => ({
+      ...prevSummary,
+      totalExpenses: total,
+      categoryExpenses: categoryTotal,
+    }));
+  };
+
   useEffect(() => {
+    fetchUser();
     fetchReactData();
   }, []);
+
+  useEffect(() => {
+    if (objectArrayState.length) {
+      calculateTotalExpenses();
+    }
+  }, [objectArrayState]);
+
+  const fetchUser = async () => {
+    const csrfToken = getCSRFToken();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/user/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from the server");
+      }
+      const data = await response.json();
+      // console.log(data);
+
+      setObjectArrayState(objectArray);
+    } catch (error) {
+      console.error("Error while fetching data:", error);
+    }
+  };
 
   const fetchReactData = async () => {
     const csrfToken = getCSRFToken();
@@ -77,7 +135,8 @@ const FormComponent = () => {
       setShowModal(false);
       setFormData({
         expenseName: "",
-        expenseCost: "",
+        expenseCategory: "",
+        expenseCost: 0,
         expenseFrequency: "",
       });
       fetchReactData();
@@ -123,46 +182,13 @@ const FormComponent = () => {
 
   return (
     <div className={`${styles.page_container}`}>
-      {/* <div className={`${styles.form_container}`}>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name">Expense:</label>
-            <input
-              type="text"
-              id="expenseName"
-              name="expenseName"
-              value={formData.expenseName}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="department">Cost:</label>
-            <input
-              type="text"
-              id="expenseCost"
-              name="expenseCost"
-              value={formData.expenseCost}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="name">Frequency:</label>
-            <input
-              type="text"
-              id="expenseFrequency"
-              name="expenseFrequency"
-              value={formData.expenseFrequency}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-      </div> */}
+      <SummaryChart summary={summary} />
       <div className={`${styles.expense_container}`}>
         {objectArrayState.map((expense) => (
           <div id={expense.expenseName}>
             <ExpenseItem
               expenseName={expense.expenseName}
+              expenseCategory={expense.expenseCategory}
               expenseCost={expense.expenseCost}
               expenseFrequency={expense.expenseFrequency}
               deleteItem={() => handleDelete(expense.expenseName)}
@@ -185,4 +211,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default ExpensesList;

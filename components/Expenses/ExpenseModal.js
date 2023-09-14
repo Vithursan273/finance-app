@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { categories } from "./data.js";
 
 const ExpenseModal = ({
   isVisible,
@@ -50,9 +51,25 @@ const ExpenseModal = ({
               />
             </div>
             <div>
+              <label htmlFor="category">Select Category:</label>
+              <select
+                id="expenseCategory"
+                name="expenseCategory"
+                value={formData.expenseCategory}
+                onChange={handleChange}
+              >
+                <option value="">Choose a category</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label htmlFor="department">Cost:</label>
               <input
-                type="text"
+                type="number"
                 id="expenseCost"
                 name="expenseCost"
                 value={formData.expenseCost}

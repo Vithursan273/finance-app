@@ -9,7 +9,7 @@ const MainNavigation = () => {
   const router = useRouter();
   const { rerenderNavigation } = useMainNavigation();
 
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState({});
   const [registrationToggle, setRegistrationToggle] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -19,18 +19,32 @@ const MainNavigation = () => {
     router.push("/login");
   };
 
+  const getCSRFToken = () => {
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken="))
+      .split("=")[1];
+    return cookieValue;
+  };
+
   async function fetchUserData() {
+    const csrfToken = getCSRFToken();
     try {
       const response = await fetch("http://127.0.0.1:8000/user/", {
         method: "GET",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
       });
 
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
       }
-
+      const data = await response.json();
       setCurrentUser(true);
+      setUsername(data.user.username);
     } catch (error) {
       setCurrentUser(false);
     }
@@ -78,12 +92,14 @@ const MainNavigation = () => {
             Finance App
           </span>
           {currentUser ? (
-            <button
-              class="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={(e) => submitLogout(e)}
-            >
-              Logout
-            </button>
+            <div>
+              <button
+                class="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={(e) => submitLogout(e)}
+              >
+                {username}
+              </button>
+            </div>
           ) : (
             <Link href="/login">
               <button class="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
