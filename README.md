@@ -2,6 +2,10 @@
 
 Hello, this is the frontend of my financial assistance app called 'ExpenseEase'. This is a project built using a Next.js 13 frontend and a Django backend. This app offers an abundance of features that serve the purpose of making financial tracking and decision making easier and streamlined for the user.
 
+IMPORTANT NOTE:
+
+This repository works along with the "financial-app-backend" repository, which is the Django backend for this application. This README will hold all information pertaining to the features and setup of both the seperate frontend and backend repositories.
+
 ## Getting Started
 
 First, run the development server:
