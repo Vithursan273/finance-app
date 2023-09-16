@@ -25,6 +25,7 @@ const ExpensesList = () => {
     expenseCost: 0,
     expenseFrequency: "",
   });
+
   const [objectArrayState, setObjectArrayState] = useState([]);
 
   const [summary, setSummary] = useState({
@@ -45,7 +46,7 @@ const ExpensesList = () => {
           objectArrayState[i].expenseCost;
       }
     }
-    console.log(categoryTotal);
+    // console.log(categoryTotal);
     setSummary((prevSummary) => ({
       ...prevSummary,
       totalExpenses: total,
@@ -180,6 +181,31 @@ const ExpensesList = () => {
     }));
   };
 
+  const fetchExpensePdf = async () => {
+    const csrfToken = getCSRFToken();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/expense_pdf/", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from the server");
+      }
+      const pdfBlob = await response.blob();
+
+      // Create a URL for the blob
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Open the PDF in a new tab for download
+      window.open(pdfUrl, "_blank");
+    } catch (error) {
+      console.error("Error while fetching data:", error);
+    }
+  };
+
   return (
     <div className={`${styles.page_container}`}>
       <SummaryChart summary={summary} />
@@ -204,9 +230,18 @@ const ExpensesList = () => {
         handleSubmit={handleSubmit}
         handleChange={handleChange}
       />
-      <span className={`text-[16px]`} onClick={handlePreview}>
+      <button
+        className={`text-[16px] bg-gray-500 text-white px-4 py-2 rounded mr-1.5 mt-[10px]`}
+        onClick={handlePreview}
+      >
         ADD
-      </span>
+      </button>
+      <button
+        className={`text-[16px] bg-red-500 text-white px-4 py-2 rounded mr-1.5 mt-[10px]`}
+        onClick={fetchExpensePdf}
+      >
+        EXPORT
+      </button>
     </div>
   );
 };
