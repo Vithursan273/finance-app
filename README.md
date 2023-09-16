@@ -20,5 +20,6 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000/) with your browser to see th
 
 - User authentication using Django's built in user authentication system
 - Allows users to create and manage their expense and revenue streams
-  - test
+  - Expense and Revenue streams are created and can be editted and deleted using Django REST Framework APIs
+  - Expense and Revenue streams created and managed on the frontend through beautiful UI consisting of several pages and other     dynamic components like modals
 
