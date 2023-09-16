@@ -7,7 +7,15 @@ This repository works along with the "financial-app-backend" repository, which i
 
 ## Getting Started
 
-First, run the development server:
+First, you will have to clone the "finance-app-frontend" and "finance-app-backend" repositories.
+
+Next, open the backend repository in the command line and run the following command:
+
+```bash
+python manage.py runserver
+```
+
+Next, open the frontend repository in the command line and run the following command:
 
 ```bash
 npm run dev
