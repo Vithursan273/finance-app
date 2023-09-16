@@ -20,5 +20,5 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000/) with your browser to see th
 
 - User authentication using Django's built in user authentication system
 - Allows users to create and manage their expense and revenue streams
--   dsfgsdfgsdfgdf
+  - test
 
